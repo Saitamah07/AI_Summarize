@@ -5,17 +5,19 @@ import { copy, linkIcon, loader, tick } from '../assets';
 import { useLazyGetSummaryQuery } from '../services/article';
 
 const Demo = () => {
+	//State Variables for article data, article history, and copy status
 	const [article, setArticle] = useState({
 		url: '',
 		summary: '',
 	});
 
-	const [allArticles, setAllArticles] = useState([]);
+	const [allArticles, setAllArticles] = useState([]); // Array to store article history
 
-	const [copied, setCopied] = useState('');
-
+	const [copied, setCopied] = useState(''); // Tracks currently copied URL
+	//Hook for fetching articles summaries
 	const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
 
+	//Load previously saved articles from localstorage on component mount
 	useEffect(() => {
 		const articlesFromLocalStorage = JSON.parse(
 			localStorage.getItem('articles')
@@ -26,26 +28,30 @@ const Demo = () => {
 		}
 	}, []);
 
+	//Handle form submission for fetching article summary
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		//Fetch the summary for the given article URL
 		const { data } = await getSummary({ articleUrl: article.url });
 
 		if (data?.summary) {
+			//Update the article state with fetched summary
 			const newArticle = { ...article, summary: data.summary };
-
+			//Add the new article to the top of the history list
 			const updateAllArticles = [newArticle, ...allArticles];
 
-			setArticle(newArticle);
-			setAllArticles(updateAllArticles);
-
+			setArticle(newArticle); // update current articfle
+			setAllArticles(updateAllArticles); //update history lis
+			//Saved the update history to local storage
 			localStorage.setItem('articles', JSON.stringify(updateAllArticles));
 		}
 	};
 
+	//Handle copying an article URL to the clipboard
 	const handleCopy = (copyUrl) => {
 		setCopied(copyUrl);
 		navigator.clipboard.writeText(copyUrl);
-		setTimeout(() => setCopied(false), 3000);
+		setTimeout(() => setCopied(false), 3000); // Reset Copied state after 3 sec
 	};
 
 	return (
@@ -66,9 +72,7 @@ const Demo = () => {
 						type='url'
 						placeholder='Enter a URL'
 						value={article.url}
-						onChange={(e) =>
-							setArticle({ ...article, url: e.target.value })
-						}
+						onChange={(e) => setArticle({ ...article, url: e.target.value })}
 						required
 						className='url_input peer'
 					/>
@@ -88,10 +92,7 @@ const Demo = () => {
 							onClick={() => setArticle(item)}
 							className='link_card'
 						>
-							<div
-								className='copy_btn'
-								onClick={() => handleCopy(item.url)}
-							>
+							<div className='copy_btn' onClick={() => handleCopy(item.url)}>
 								<img
 									src={copied === item.url ? tick : copy}
 									alt='copy_icon'
@@ -109,11 +110,7 @@ const Demo = () => {
 			{/* Display The Results */}
 			<div className='my-10 max-w-full flex justify-center items-center'>
 				{isFetching ? (
-					<img
-						src={loader}
-						alt='loader'
-						className='w-20 object-contain'
-					/>
+					<img src={loader} alt='loader' className='w-20 object-contain' />
 				) : error ? (
 					<p className='font-inter font-bold text-black text-center'>
 						Well, A error Happen...
