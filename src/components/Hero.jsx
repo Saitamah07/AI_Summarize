@@ -4,27 +4,25 @@ const Hero = () => {
 	return (
 		<header className='w-full flex justify-center items-center flex-col'>
 			<nav className='flex justify-between items-center w-full mb-10 pt-3'>
-				<img
-					src={logo}
-					alt='sumz_logo'
-					className='w-28 object-contain'
-				/>
+				<img src={logo} alt='sumz_logo' className='w-28 object-contain' />
 
-				<button
-					type='button'
-					onClick={() => window.open('')}
-					className='black_btn'
-				>
-					GitHub
+				<button type='button' className='black_btn'>
+					<a
+						href='https://github.com/Saitamah07/AI_Summarize'
+						target='__blank'
+						rel='noreferrer'
+					>
+						GitHub
+					</a>
 				</button>
 			</nav>
 			<h1 className='head_text'>
-				Summarize Articles With <br className='max-md:hidden' />
+				Resume Articulos Con <br className='max-md:hidden' />
 				<span className='orange_gradient'>OpenAI GPT-4</span>
 			</h1>
 			<h2 className='desc'>
-				Simplify your reading Summize, on open-source article summarizer
-				that transform lenghty articles into clear and concise summaries
+				Simplifique su lectura, un resumidor de artículos de código abierto que
+				transforma artículos extensos en resúmenes claros y concisos.
 			</h2>
 		</header>
 	);
